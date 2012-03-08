@@ -29,12 +29,17 @@ def render_ebookme_body(self, h, comp, *args):
 
     with h.p:
         h << "Please drop this button to your browser toolbar: "
+        h << comp.render(h, model='bookmarklet')
 
-        script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-        h << component.Component(JsBookmarklet(script_url,
-                                               self.APP_TITLE,
-                                               "Drop me in your browser toolbar!"))
+    return h.root
 
+
+@presentation.render_for(EbookMe, model='bookmarklet')
+def render_ebookme_bookmarklet(self, h, comp, *args):
+    script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
+    h << component.Component(JsBookmarklet(script_url,
+                                           self.APP_TITLE,
+                                           "Drop me in your browser toolbar!"))
     return h.root
 
 
