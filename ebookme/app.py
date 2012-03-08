@@ -3,9 +3,11 @@
 # and may be redistributed under the terms of the MIT license. See the
 # LICENSE.txt file in this distribution for details.
 
+import urlparse
 
-from nagare import presentation, wsgi, component
-import re
+from nagare import presentation, component, wsgi
+
+from ebookme.bookmarklet import JsBookmarklet
 
 
 class EbookMe(object):
@@ -27,9 +29,11 @@ def render_ebookme_body(self, h, comp, *args):
 
     with h.p:
         h << "Please drop this button to your browser toolbar: "
-        h << component.Component(Bookmarklet(self.host_url,
-                                             self.APP_TITLE,
-                                             "Drop me in your browser toolbar!"))
+
+        script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
+        h << component.Component(JsBookmarklet(script_url,
+                                               self.APP_TITLE,
+                                               "Drop me in your browser toolbar!"))
 
     return h.root
 
@@ -40,35 +44,6 @@ def render_ebookme(self, h, comp, *args):
     h << comp.render(h, model='body')
     return h.root
 
-
-# ---------------------------------------------------------------
-
-class Bookmarklet(object):
-    def __init__(self, host_url, label, title):
-        self.host_url = host_url
-        self.label = label
-        self.title = title
-
-
-@presentation.render_for(Bookmarklet)
-def render_bookmarklet(self, h, comp, *args):
-    full_static_url = self.host_url + h.head.static_url
-    element_id = h.generate_id('ebookme')
-    js = """
-    (function(){
-        var d=document, e=d.createElement('script'), b=d.body, l=d.location;
-        e.id = "%(element_id)s";
-        e.src = "%(static_url)sebookme.js";
-        b.appendChild(e);
-    })();
-    """ % dict(element_id=element_id, static_url=full_static_url)
-    js = re.sub('\s+', ' ', js.strip())
-    h << h.a(self.label,
-             title=self.title,
-             class_='bookmarklet',
-             href='javascript:%s' % js)
-
-    return h.root
 
 # ---------------------------------------------------------------
 
