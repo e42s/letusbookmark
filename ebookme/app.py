@@ -16,7 +16,7 @@ class EbookMe(object):
 def render_ebookme_head(self, h, *args):
     h.head << h.head.title(self.APP_TITLE)
     h.head << h.head.meta({'http-equiv': 'Content-Type', 'content': 'text/html; charset=UTF-8'})
-    h.head.css_url('/static/ebookme/screen.css')
+    h.head.css_url('screen.css')
     return h.root
 
 
