@@ -1,0 +1,11 @@
+.bookmarklet {
+    background-color: #CCC;
+    border: 1px solid #999;
+    padding: 5px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #666;
+    text-decoration: none;
+    text-align: center;
+}

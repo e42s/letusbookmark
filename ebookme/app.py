@@ -8,13 +8,42 @@ from nagare import presentation
 
 
 class EbookMe(object):
-    pass
+    APP_TITLE = "Ebook.me"
+
+
+@presentation.render_for(EbookMe, model='head')
+def render_ebookme_head(self, h, *args):
+    h.head << h.head.title(self.APP_TITLE)
+    h.head << h.head.meta({'http-equiv': 'Content-Type', 'content': 'text/html; charset=UTF-8'})
+    h.head.css_url('/static/ebookme/screen.css')
+    #h.head.javascript_url('/static/ebookme/site.js')
+    return h.root
+
+
+@presentation.render_for(EbookMe, model='body')
+def render_ebookme_body(self, h, comp, *args):
+    with h.h1:
+        h << self.APP_TITLE
+
+    with h.p:
+        h << "Please drop this button to your browser toolbar: "
+
+        # FIXME: do something useful here
+        js = """
+        alert(document.location);
+        """
+        h << h.a(self.APP_TITLE,
+                 title="Drop me in your browser toolbar!",
+                 class_='bookmarklet',
+                 href="javascript:%s" % js.strip())
+
+    return h.root
 
 
 @presentation.render_for(EbookMe)
-def render(self, h, *args):
-    h << "Hello world!"
-
+def render_ebookme(self, h, comp, *args):
+    h << comp.render(h, model='head')
+    h << comp.render(h, model='body')
     return h.root
 
 
