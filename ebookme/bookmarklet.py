@@ -29,7 +29,7 @@ def render_bookmarklet(self, h, comp, *args):
             b = d.body,
             e = d.createElement('script'),
             oldE = d.getElementById('%(id)s');
-        if (oldE) oldE.parentNode.removeChild(oldE); 
+        if (oldE) oldE.parentNode.removeChild(oldE);
         e.id = '%(id)s';
         e.src = '%(script_url)s';
         b.appendChild(e);
