@@ -12,36 +12,6 @@ def _generate_id(prefix='id'):
     return prefix + str(random.randint(10000000, 99999999))
 
 
-def js_bookmarklet(target_url, element_id=None):
-    """Render a bookmarklet URL that executes the javascript code found at `target_url` in the
-    current page."""
-    element_id = element_id or _generate_id('bookmarklet')
-
-    subst = dict(
-        element_id=json.dumps(element_id),
-        target_url=json.dumps(target_url),
-    )
-
-    href = """
-    javascript:(function(){
-        var d=document,
-            b=d.body,
-            i=%(element_id)s,
-            u=%(target_url)s,
-            e=d.createElement('script'),
-            o=d.getElementById(i);
-        if (o) o.parentNode.removeChild(o);
-        e.id=i;
-        e.src=u;
-        b.insertBefore(e, b.firstChild);
-    })();
-    """ % subst
-
-    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
-
-
-# ---------------------------------------------------------------
-
 def bookmarklet(target_url, width=None, height=None, element_id=None):
     """Render a bookmarklet URL that show the page found at `target_url` as an HTML object (like
     an iframe) embedded in the current page"""
@@ -79,5 +49,33 @@ def bookmarklet(target_url, width=None, height=None, element_id=None):
     #<!--[if IE]>
     #<style type="text/css">html, body {border:0;overflow:visible;}</style>
     #<![endif]-->
+
+    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
+
+
+def js_bookmarklet(target_url, element_id=None):
+    """Render a bookmarklet URL that executes the javascript code found at `target_url` in the
+    current page."""
+    element_id = element_id or _generate_id('bookmarklet')
+
+    subst = dict(
+        element_id=json.dumps(element_id),
+        target_url=json.dumps(target_url),
+    )
+
+    href = """
+    javascript:(function(){
+        var d=document,
+            b=d.body,
+            i=%(element_id)s,
+            u=%(target_url)s,
+            e=d.createElement('script'),
+            o=d.getElementById(i);
+        if (o) o.parentNode.removeChild(o);
+        e.id=i;
+        e.src=u;
+        b.insertBefore(e, b.firstChild);
+    })();
+    """ % subst
 
     return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
