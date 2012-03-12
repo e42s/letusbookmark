@@ -9,20 +9,21 @@ import re
 from nagare import presentation
 
 
+def _generate_id(prefix='id'):
+    return prefix + str(random.randint(10000000, 99999999))
+
+
 class JsBookmarklet(object):
-    def __init__(self, script_url, label, title, element_id=None):
+    def __init__(self, script_url, label, title=None, element_id=None, link_class='bookmarklet'):
         self.script_url = script_url
         self.label = label
         self.title = title
-        self.element_id = element_id or self.generate_id()
-
-    @staticmethod
-    def generate_id(prefix='bookmarklet'):
-        return prefix + str(random.randint(10000000, 99999999))
+        self.element_id = element_id or _generate_id('bookmarklet')
+        self.link_class = link_class
 
 
 @presentation.render_for(JsBookmarklet)
-def render_bookmarklet(self, h, comp, *args):
+def render_js_bookmarklet(self, h, comp, *args):
     js = """
     (function(){
         var d = document,
@@ -39,23 +40,13 @@ def render_bookmarklet(self, h, comp, *args):
 
     js = re.sub('\s+', ' ', js.strip())  # remove unnecessary spaces for compactness
 
-    h << h.a(self.label,
-             title=self.title,
-             class_='bookmarklet',
+    link = h.a(self.label,
+             class_=self.link_class,
              href='javascript:%s' % js)
 
+    if self.title:
+        link.set('title', self.title)
+
+    h << link
+
     return h.root
-
-
-# ---------------------------------------------------------------
-
-#    content_url = ...
-#    js = """
-#    (function(){
-#        var d=document,
-#            b=d.body, 
-#            e=d.createElement('iframe');
-#        e.src = '%s';
-#        b.appendChild(e);
-#    })();
-#    """ % content_url
