@@ -12,9 +12,9 @@ def _generate_id(prefix='id'):
     return prefix + str(random.randint(10000000, 99999999))
 
 
-def bookmarklet(target_url, width=None, height=None, element_id=None):
+def object_bookmarklet(target_url, width=None, height=None, element_id=None, type_='text/html'):
     """Render a bookmarklet URL that shows the page found at `target_url` as an HTML object (like
-    an iframe) embedded in the current page"""
+    an iframe) embedded in the current page."""
     element_id = element_id or _generate_id('bookmarklet')
 
     subst = dict(
@@ -22,6 +22,7 @@ def bookmarklet(target_url, width=None, height=None, element_id=None):
         target_url=json.dumps(target_url),
         width=json.dumps(width),
         height=json.dumps(height),
+        type_=json.dumps(type_),
     )
 
     href = """
@@ -35,7 +36,7 @@ def bookmarklet(target_url, width=None, height=None, element_id=None):
         if (o) o.parentNode.removeChild(o);
         e.id=i;
         e.data=u;
-        e.type="text/html";
+        e.type=%(type_)s;
         e.width=%(width)s;
         e.height=%(height)s;
         e.innerHTML='<a href="' + u + '">' + u + '</a>';
@@ -53,7 +54,7 @@ def bookmarklet(target_url, width=None, height=None, element_id=None):
     return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
 
 
-def js_bookmarklet(target_url, element_id=None):
+def script_bookmarklet(target_url, element_id=None, type_='text/javascript'):
     """Render a bookmarklet URL that executes the javascript code found at `target_url` in the
     current page."""
     element_id = element_id or _generate_id('bookmarklet')
@@ -61,6 +62,7 @@ def js_bookmarklet(target_url, element_id=None):
     subst = dict(
         element_id=json.dumps(element_id),
         target_url=json.dumps(target_url),
+        type_=json.dumps(type_),
     )
 
     href = """
@@ -74,6 +76,7 @@ def js_bookmarklet(target_url, element_id=None):
         if (o) o.parentNode.removeChild(o);
         e.id=i;
         e.src=u;
+        e.type=%(type_)s;
         b.insertBefore(e, b.firstChild);
     })();
     """ % subst

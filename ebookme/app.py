@@ -7,7 +7,7 @@ import urlparse
 
 from nagare import presentation, component, wsgi
 
-from ebookme.bookmarklet import bookmarklet, js_bookmarklet
+from ebookme.bookmarklet import object_bookmarklet, script_bookmarklet
 
 
 class EbookMe(object):
@@ -32,20 +32,20 @@ def render_ebookme_body(self, h, comp, *args):
 
         with h.ul(class_='buttons'):
             with h.li:
-                page_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-                page_href = bookmarklet(page_url, width='500', height='50')
+                object_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
+                object_href = object_bookmarklet(object_url, width='500', height='50')
                 h << h.a('%s Object' % self.APP_TITLE,
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
-                         href=page_href)
+                         href=object_href)
 
             with h.li:
                 script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-                js_href = js_bookmarklet(script_url)
+                script_href = script_bookmarklet(script_url)
                 h << h.a('%s JS' % self.APP_TITLE,
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
-                         href=js_href)
+                         href=script_href)
 
     return h.root
 
