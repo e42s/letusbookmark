@@ -15,3 +15,16 @@ def render_alert(self, h, comp, *args):
     js = "alert(document.location);"
     h << h.script(js, type='text/javascript')
     return h.root
+
+
+class Message(object):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+@presentation.render_for(Message)
+def render_message(self, h, comp, *args):
+    with h.p:
+        h << self.msg
+    return h.root
+
