@@ -7,7 +7,8 @@ import urlparse
 
 from nagare import presentation, component, wsgi
 
-from ebookme.bookmarklet import JsBookmarklet
+from ebookme.bookmarklet import JsBookmarklet, Bookmarklet
+from ebookme.alert import Message
 
 
 class EbookMe(object):
@@ -29,17 +30,30 @@ def render_ebookme_body(self, h, comp, *args):
 
     with h.p:
         h << "Please drop this button to your browser toolbar: "
-        h << comp.render(h, model='bookmarklet')
+        h << comp.render(h, model='js_bookmarklet')
+        #h << comp.render(h, model='bookmarklet')
 
+    return h.root
+
+
+@presentation.render_for(EbookMe, model='js_bookmarklet')
+def render_ebookme_js_bookmarklet(self, h, comp, *args):
+    script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
+    h << component.Component(JsBookmarklet(script_url,
+                                           label=self.APP_TITLE,
+                                           title="Drop me in your browser toolbar!"))
     return h.root
 
 
 @presentation.render_for(EbookMe, model='bookmarklet')
 def render_ebookme_bookmarklet(self, h, comp, *args):
-    script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-    h << component.Component(JsBookmarklet(script_url,
-                                           self.APP_TITLE,
-                                           "Drop me in your browser toolbar!"))
+    h << component.Component(Bookmarklet(Message('It works!'),
+                                         host_url=self.host_url,
+                                         label=self.APP_TITLE,
+                                         title="Drop me in your browser toolbar!",
+                                         width='500',
+                                         height='50'))
+
     return h.root
 
 
