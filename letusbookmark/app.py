@@ -53,7 +53,7 @@ def render_let_us_bookmark_body(self, h, comp, *args):
 
         with h.li:
             url = self.application_url + '/counter'
-            style = "position: absolute; top: 10px; right: 10px; z-index: 16777271;"
+            style = "position: fixed; top: 10px; right: 10px; z-index: 16777271;"
             href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
             h << h.a('Counter',
                      title="Drop me in your browser toolbar!",
