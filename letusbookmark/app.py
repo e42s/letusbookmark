@@ -37,7 +37,7 @@ def render_let_us_bookmark_body(self, h, comp, *args):
     with h.ul(class_='buttons'):
         with h.li:
             url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-            href = object_bookmarklet(url, mode=Mode.Once, width='800', height='200')
+            href = object_bookmarklet(url, mode=Mode.Once, width=800, height=200)
             h << h.a('Lorem Ipsum',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
