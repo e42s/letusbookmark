@@ -13,7 +13,7 @@ def _generate_id(prefix='id'):
 
 
 def object_bookmarklet(target_url, width=None, height=None, style=None, element_id=None, type_='text/html'):
-    """Render a bookmarklet URL that shows the page found at `target_url` as an HTML object (like
+    """Render a bookmarklet URL that shows the resource found at `target_url` as an HTML object (like
     an iframe) embedded in the current page."""
     element_id = element_id or _generate_id('bookmarklet')
 
@@ -61,7 +61,7 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, element_
 
 
 def script_bookmarklet(target_url, element_id=None, type_='text/javascript'):
-    """Render a bookmarklet URL that executes the javascript code found at `target_url` in the
+    """Render a bookmarklet URL that executes the script code found at `target_url` in the
     current page."""
     element_id = element_id or _generate_id('bookmarklet')
 

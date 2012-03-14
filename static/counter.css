@@ -1,5 +1,8 @@
+html, body {
+    background: transparent;
+}
+
 .counter {
-    width: 100px;
     padding: 10px;
     background: #CCC;
     border: 1px solid #999;
@@ -13,6 +16,7 @@
 .counter .separator {
     color: #AAA;
 }
+
 .counter a {
     display: inline-block;
     width: 10px;

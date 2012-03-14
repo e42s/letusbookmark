@@ -19,6 +19,9 @@ class Counter(object):
 
 @presentation.render_for(Counter)
 def render_counter(self, h, comp, *args):
+    # we use a CSS reset to prevent the host page styles to leak in our component
+    h.head.css_url('http://yui.yahooapis.com/2.9.0/build/reset/reset-min.css')
+    # component specific CSS
     h.head.css_url('counter.css')
 
     with h.div(class_='counter'):
