@@ -31,4 +31,11 @@ def render_counter(self, h, comp, *args):
         h << h.span(' | ', class_='separator')
         h << h.a('+').action(self.increment)
 
+    js = """
+    if (console) {
+        console.log("Location: " + window.parent.location);
+    }
+    """
+    h << h.script(js, type='text/javascript')
+
     return h.root
