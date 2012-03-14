@@ -32,17 +32,21 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, element_
             b=d.body, 
             i=%(element_id)s,
             u=%(target_url)s,
-            e=d.createElement('object'),
             o=d.getElementById(i);
-        if (o) o.parentNode.removeChild(o);
-        e.id=i;
-        e.data=u;
-        e.type=%(type_)s;
-        e.width=%(width)s;
-        e.height=%(height)s;
-        e.setAttribute("style", %(style)s);
-        e.innerHTML='<a href="' + u + '">' + u + '</a>';
-        b.insertBefore(e, b.firstChild);
+        if (o) {
+            o.parentNode.removeChild(o);
+        }
+        else {
+            var e=d.createElement('object');
+            e.id=i;
+            e.data=u;
+            e.type=%(type_)s;
+            e.width=%(width)s;
+            e.height=%(height)s;
+            e.setAttribute("style", %(style)s);
+            e.innerHTML='<a href="' + u + '">' + u + '</a>';
+            b.insertBefore(e, b.firstChild);
+        }
     })();
     """ % subst
 
