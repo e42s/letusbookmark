@@ -36,28 +36,29 @@ def render_let_us_bookmark_body(self, h, comp, *args):
 
         with h.ul(class_='buttons'):
             with h.li:
-                object_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-                object_href = object_bookmarklet(object_url, width='500', height='50')
+                url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
+                href = object_bookmarklet(url, width='500', height='50')
                 h << h.a('Object Bookmarklet',
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
-                         href=object_href)
+                         href=href)
 
             with h.li:
-                script_url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-                script_href = script_bookmarklet(script_url)
+                url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
+                href = script_bookmarklet(url)
                 h << h.a('JS Bookmarklet',
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
-                         href=script_href)
+                         href=href)
 
             with h.li:
-                object_url = ''
-                object_href = object_bookmarklet(object_url, width='500', height='50')
+                url = self.application_url + '/counter'
+                style = "position: absolute; top: 20px; right: 20px; z-index: 16777271;"
+                href = object_bookmarklet(url, width='140', height='60', style=style)
                 h << h.a('Counter Bookmarklet',
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
-                         href=object_href)
+                         href=href)
 
     return h.root
 
@@ -69,12 +70,18 @@ def render_let_us_bookmark(self, h, comp, *args):
     return h.root
 
 
+@presentation.init_for(LetUsBookmark, "url == ('counter',)")
+def init_render_let_us_bookmark_counter(self, url, comp, *args):
+    comp.becomes(Counter())
+
+
 # ---------------------------------------------------------------
 
 class LetUsBookmarkApp(wsgi.WSGIApp):
     def start_request(self, root, request, response):
         super(LetUsBookmarkApp, self).start_request(root, request, response)
         root().host_url = request.host_url
+        root().application_url = request.application_url
 
 
 # ---------------------------------------------------------------
