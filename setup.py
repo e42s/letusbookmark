@@ -24,7 +24,7 @@ def find_version(*file_paths):
 
 
 # package description
-desc = "Let Us Bookmark demonstrates how to wrap Nagare component into bookmarklets"
+desc = "Let Us Bookmark demonstrates how to create bookmarklets with Nagare."
 long_desc = read('README')
 
 
