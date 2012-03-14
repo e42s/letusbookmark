@@ -12,7 +12,7 @@ def _generate_id(prefix='id'):
     return prefix + str(random.randint(10000000, 99999999))
 
 
-def object_bookmarklet(target_url, width=None, height=None, element_id=None, type_='text/html'):
+def object_bookmarklet(target_url, width=None, height=None, style=None, element_id=None, type_='text/html'):
     """Render a bookmarklet URL that shows the page found at `target_url` as an HTML object (like
     an iframe) embedded in the current page."""
     element_id = element_id or _generate_id('bookmarklet')
@@ -22,6 +22,7 @@ def object_bookmarklet(target_url, width=None, height=None, element_id=None, typ
         target_url=json.dumps(target_url),
         width=json.dumps(width),
         height=json.dumps(height),
+        style=json.dumps(style),
         type_=json.dumps(type_),
     )
 
@@ -39,6 +40,7 @@ def object_bookmarklet(target_url, width=None, height=None, element_id=None, typ
         e.type=%(type_)s;
         e.width=%(width)s;
         e.height=%(height)s;
+        e.setAttribute("style", %(style)s);
         e.innerHTML='<a href="' + u + '">' + u + '</a>';
         b.insertBefore(e, b.firstChild);
     })();
