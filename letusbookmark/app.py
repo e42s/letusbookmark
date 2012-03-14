@@ -34,31 +34,31 @@ def render_let_us_bookmark_body(self, h, comp, *args):
     with h.p:
         h << "Please drop these bookmarklets in your browser toolbar:"
 
-        with h.ul(class_='buttons'):
-            with h.li:
-                url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-                href = object_bookmarklet(url, mode=Mode.Once, width='800', height='200')
-                h << h.a('Lorem Ipsum',
-                         title="Drop me in your browser toolbar!",
-                         class_='bookmarklet',
-                         href=href)
+    with h.ul(class_='buttons'):
+        with h.li:
+            url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
+            href = object_bookmarklet(url, mode=Mode.Once, width='800', height='200')
+            h << h.a('Lorem Ipsum',
+                     title="Drop me in your browser toolbar!",
+                     class_='bookmarklet',
+                     href=href)
 
-            with h.li:
-                url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-                href = script_bookmarklet(url, mode=Mode.Repeat)
-                h << h.a('Location',
-                         title="Drop me in your browser toolbar!",
-                         class_='bookmarklet',
-                         href=href)
+        with h.li:
+            url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
+            href = script_bookmarklet(url, mode=Mode.Repeat)
+            h << h.a('Location',
+                     title="Drop me in your browser toolbar!",
+                     class_='bookmarklet',
+                     href=href)
 
-            with h.li:
-                url = self.application_url + '/counter'
-                style = "position: absolute; top: 10px; right: 10px; z-index: 16777271;"
-                href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
-                h << h.a('Counter',
-                         title="Drop me in your browser toolbar!",
-                         class_='bookmarklet',
-                         href=href)
+        with h.li:
+            url = self.application_url + '/counter'
+            style = "position: absolute; top: 10px; right: 10px; z-index: 16777271;"
+            href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
+            h << h.a('Counter',
+                     title="Drop me in your browser toolbar!",
+                     class_='bookmarklet',
+                     href=href)
 
     return h.root
 
