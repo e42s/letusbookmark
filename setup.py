@@ -24,29 +24,29 @@ def find_version(*file_paths):
 
 
 # package description
-desc = "ebookme is a Web application that provides a bookmarklet to convert any web page to a .mobi file"
+desc = "letusbookmark show how to wrap Nagare component into bookmarklets"
 long_desc = read('README')
 
 
 setup(
-      name='ebookme',
-      version=find_version('ebookme', '__init__.py'),
+      name='letusbookmark',
+      version=find_version('letusbookmark', '__init__.py'),
       author='Sylvain Prat',
-      author_email='sylvain.prat+ebookme@gmail.com',
+      author_email='sylvain.prat+letusbookmark@gmail.com',
       description=desc,
       long_description=long_desc,
       license='MIT License',
       keywords='',
-      url='http://bitbucket.org/sprat/ebookme',
+      url='http://bitbucket.org/sprat/letusbookmark',
       packages=find_packages(),
       include_package_data=True,
       package_data={'' : ['*.cfg']},
       zip_safe=False,
       install_requires=('nagare',),
-      message_extractors={ 'ebook.me' : [('**.py', 'python', None)] },
+      message_extractors={ 'letusbookmark' : [('**.py', 'python', None)] },
       entry_points="""
       [nagare.applications]
-      ebookme = ebookme.app:app
+      letusbookmark = letusbookmark.app:app
       """
      )
 
