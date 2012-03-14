@@ -12,15 +12,24 @@ def _generate_id(prefix='id'):
     return prefix + str(random.randint(10000000, 99999999))
 
 
-def object_bookmarklet(target_url, width=None, height=None, style=None, id=None, type='text/html'):
+class Mode:
+    """What should we do when someone repeatedly click on the bookmarklet? Should we execute the bookmarklet
+    action once, repeatedly, or toggle it on/off"""
+    Once = 0  # run only once
+    Toggle = 1  # switch on/off
+    Repeat = 2  # run at each click
+
+
+def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, style=None, id=None, type='text/html'):
     """Render a bookmarklet URL that shows the resource found at `target_url` as an HTML object (like
     an iframe) embedded in the current page."""
     subst = dict(
-        id=json.dumps(id or _generate_id('bookmarklet')),
         target_url=json.dumps(target_url),
+        mode=json.dumps(mode),
         width=json.dumps(width),
         height=json.dumps(height),
         style=json.dumps(style),
+        id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
     )
 
@@ -28,23 +37,24 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, id=None,
     javascript:(function(){
         var d=document,
             b=d.body, 
-            i=%(id)s,
             u=%(target_url)s,
+            m=%(mode)s,
+            i=%(id)s,
             o=d.getElementById(i);
         if (o) {
+            if (m==0) return;
             o.parentNode.removeChild(o);
+            if (m==1) return;
         }
-        else {
-            var e=d.createElement('object');
-            e.id=i;
-            e.data=u;
-            e.type=%(type)s;
-            e.width=%(width)s;
-            e.height=%(height)s;
-            e.setAttribute("style", %(style)s);
-            e.innerHTML='<a href="' + u + '">' + u + '</a>';
-            b.insertBefore(e, b.firstChild);
-        }
+        var e=d.createElement('object');
+        e.id=i;
+        e.data=u;
+        e.type=%(type)s;
+        e.width=%(width)s;
+        e.height=%(height)s;
+        e.setAttribute("style", %(style)s);
+        e.innerHTML='<a href="' + u + '">' + u + '</a>';
+        b.insertBefore(e, b.firstChild);
     })();
     """ % subst
 
@@ -58,12 +68,13 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, id=None,
     return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
 
 
-def script_bookmarklet(target_url, id=None, type='text/javascript'):
+def script_bookmarklet(target_url, mode=Mode.Once, id=None, type='text/javascript'):
     """Render a bookmarklet URL that executes the script code found at `target_url` in the
     current page."""
     subst = dict(
-        id=json.dumps(id or _generate_id('bookmarklet')),
         target_url=json.dumps(target_url),
+        mode=json.dumps(mode),
+        id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
     )
 
@@ -71,11 +82,16 @@ def script_bookmarklet(target_url, id=None, type='text/javascript'):
     javascript:(function(){
         var d=document,
             b=d.body,
-            i=%(id)s,
             u=%(target_url)s,
-            e=d.createElement('script'),
+            m=%(mode)s,
+            i=%(id)s,
             o=d.getElementById(i);
-        if (o) o.parentNode.removeChild(o);
+        if (o) {
+            if (m==0) return;
+            o.parentNode.removeChild(o);
+            if (m==1) return;
+        }
+        var e=d.createElement('script');
         e.id=i;
         e.src=u;
         e.type=%(type)s;
