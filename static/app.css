@@ -1,10 +1,11 @@
 ul.buttons {
     padding: 0;
+    overflow: auto;
 }
 
 ul.buttons li {
     list-style: none;
-    display: inline-block;
+    float: left;
     margin: 0 5px;
 }
 
