@@ -33,6 +33,7 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
         type=json.dumps(type),
     )
 
+    # no content fallback since IE does not to handle it (or I can't get it to work)
     href = """
     javascript:(function(){
         var d=document,
