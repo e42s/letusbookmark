@@ -32,7 +32,7 @@ def render_counter(self, h, comp, *args):
         h << h.a('+').action(self.increment)
 
     js = """
-    if (console) {
+    if (window.console) {
         console.log("Location: " + window.parent.location);
     }
     """

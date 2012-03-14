@@ -26,8 +26,8 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
     subst = dict(
         target_url=json.dumps(target_url),
         mode=json.dumps(mode),
-        width=json.dumps(width),
-        height=json.dumps(height),
+        width=json.dumps(int(width)),
+        height=json.dumps(int(height)),
         style=json.dumps(style),
         id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
@@ -53,17 +53,9 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
         e.width=%(width)s;
         e.height=%(height)s;
         e.setAttribute("style", %(style)s);
-        e.innerHTML='<a href="' + u + '">' + u + '</a>';
         b.insertBefore(e, b.firstChild);
     })();
     """ % subst
-
-    # On IE 6/7, we also need this:
-    # See http://aplus.rs/web-dev/insert-html-page-into-another-html-page/
-    #e.classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13";
-    #<!--[if IE]>
-    #<style type="text/css">html, body {border:0;overflow:visible;}</style>
-    #<![endif]-->
 
     return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
 
