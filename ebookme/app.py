@@ -8,17 +8,21 @@ import urlparse
 from nagare import presentation, component, wsgi
 
 from ebookme.bookmarklet import object_bookmarklet, script_bookmarklet
+from ebookme.counter import Counter
 
 
 class EbookMe(object):
     APP_TITLE = "Ebook.me"
+
+    def __init__(self):
+        self.counter = component.Component(Counter())
 
 
 @presentation.render_for(EbookMe, model='head')
 def render_ebookme_head(self, h, *args):
     h.head << h.head.title(self.APP_TITLE)
     h.head << h.head.meta({'http-equiv': 'Content-Type', 'content': 'text/html; charset=UTF-8'})
-    h.head.css_url('screen.css')
+    h.head.css_url('app.css')
     return h.root
 
 
@@ -46,6 +50,8 @@ def render_ebookme_body(self, h, comp, *args):
                          title="Drop me in your browser toolbar!",
                          class_='bookmarklet',
                          href=script_href)
+
+    h << self.counter
 
     return h.root
 

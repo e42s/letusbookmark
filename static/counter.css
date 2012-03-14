@@ -1,0 +1,21 @@
+.counter {
+    width: 100px;
+    padding: 10px;
+    background: #CCC;
+    border: 1px solid #999;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align:center;
+}
+
+.counter .separator {
+    color: #AAA;
+}
+.counter a {
+    display: inline-block;
+    width: 10px;
+    color: #000;
+    text-decoration: none;
+}
