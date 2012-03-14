@@ -12,25 +12,23 @@ def _generate_id(prefix='id'):
     return prefix + str(random.randint(10000000, 99999999))
 
 
-def object_bookmarklet(target_url, width=None, height=None, style=None, element_id=None, type_='text/html'):
+def object_bookmarklet(target_url, width=None, height=None, style=None, id=None, type='text/html'):
     """Render a bookmarklet URL that shows the resource found at `target_url` as an HTML object (like
     an iframe) embedded in the current page."""
-    element_id = element_id or _generate_id('bookmarklet')
-
     subst = dict(
-        element_id=json.dumps(element_id),
+        id=json.dumps(id or _generate_id('bookmarklet')),
         target_url=json.dumps(target_url),
         width=json.dumps(width),
         height=json.dumps(height),
         style=json.dumps(style),
-        type_=json.dumps(type_),
+        type=json.dumps(type),
     )
 
     href = """
     javascript:(function(){
         var d=document,
             b=d.body, 
-            i=%(element_id)s,
+            i=%(id)s,
             u=%(target_url)s,
             o=d.getElementById(i);
         if (o) {
@@ -40,7 +38,7 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, element_
             var e=d.createElement('object');
             e.id=i;
             e.data=u;
-            e.type=%(type_)s;
+            e.type=%(type)s;
             e.width=%(width)s;
             e.height=%(height)s;
             e.setAttribute("style", %(style)s);
@@ -60,29 +58,27 @@ def object_bookmarklet(target_url, width=None, height=None, style=None, element_
     return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
 
 
-def script_bookmarklet(target_url, element_id=None, type_='text/javascript'):
+def script_bookmarklet(target_url, id=None, type='text/javascript'):
     """Render a bookmarklet URL that executes the script code found at `target_url` in the
     current page."""
-    element_id = element_id or _generate_id('bookmarklet')
-
     subst = dict(
-        element_id=json.dumps(element_id),
+        id=json.dumps(id or _generate_id('bookmarklet')),
         target_url=json.dumps(target_url),
-        type_=json.dumps(type_),
+        type=json.dumps(type),
     )
 
     href = """
     javascript:(function(){
         var d=document,
             b=d.body,
-            i=%(element_id)s,
+            i=%(id)s,
             u=%(target_url)s,
             e=d.createElement('script'),
             o=d.getElementById(i);
         if (o) o.parentNode.removeChild(o);
         e.id=i;
         e.src=u;
-        e.type=%(type_)s;
+        e.type=%(type)s;
         b.insertBefore(e, b.firstChild);
     })();
     """ % subst
