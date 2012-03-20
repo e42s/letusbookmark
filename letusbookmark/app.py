@@ -52,18 +52,19 @@ def render_let_us_bookmark_body(self, h, comp, *args):
                      href=href)
 
         with h.li:
-            url = self.application_url + '/counter'
-            style = "position: fixed; top: 10px; right: 10px; z-index: 16777271;"
-            href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
-            h << h.a('Counter',
+            url = self.application_url + '/location?url='
+            style = "width: 100%; height: 30px;"
+            href = object_bookmarklet(url, with_location=True, mode=Mode.Toggle, style=style)
+            h << h.a('Location2',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
                      href=href)
 
         with h.li:
-            url = self.application_url + '/alert'
-            href = object_bookmarklet(url, mode=Mode.Repeat, width=0, height=0, style="position:absolute")
-            h << h.a('Alert',
+            url = self.application_url + '/counter'
+            style = "position: fixed; top: 10px; right: 10px; z-index: 16777271;"
+            href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
+            h << h.a('Counter',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
                      href=href)
@@ -78,23 +79,33 @@ def render_let_us_bookmark(self, h, comp, *args):
     return h.root
 
 
-@presentation.render_for(LetUsBookmark, model='alert')
-def render_let_us_bookmark_alert(self, h, comp, *args):
-    js = """
-    alert("Alert !");
-    """
-    h << h.script(js, type='text/javascript')
-    return h.root
-
-
 @presentation.init_for(LetUsBookmark, "url == ('counter',)")
 def init_render_let_us_bookmark_counter(self, url, comp, *args):
     comp.becomes(Counter())
 
 
-@presentation.init_for(LetUsBookmark, "url == ('alert',)")
-def init_render_let_us_bookmark_alert(self, url, comp, *args):
-    comp.becomes(self, model='alert')
+@presentation.init_for(LetUsBookmark, "url == ('location',)")
+def init_render_let_us_bookmark_alert(self, url, comp, http_method, request):
+    # The referrer information is lost when we call an HTTP URL from a HTTPS one
+    # Also, depending on the browser privacy settings, the referrer information
+    # may not be sent at all. So we can't rely on it.
+    #origin_url = request.referrer
+    origin_url = request.params['url']
+    comp.becomes(Location(origin_url))
+
+
+# ---------------------------------------------------------------
+
+class Location(object):
+    def __init__(self, url):
+        self.url = url
+
+
+@presentation.render_for(Location)
+def render_location(self, h, comp, *args):
+    h << "You are here: %s" % self.url
+    return h.root
+
 
 # ---------------------------------------------------------------
 

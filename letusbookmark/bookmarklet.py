@@ -20,7 +20,8 @@ class Mode:
     Repeat = 2  # run at each click
 
 
-def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, style=None, id=None, type='text/html'):
+def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, style=None,
+                       id=None, type='text/html', with_location=False):
     """Render a bookmarklet URL that shows the resource found at `target_url` as an HTML object (like
     an iframe) embedded in the current page."""
     subst = dict(
@@ -31,6 +32,7 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
         style=json.dumps(style),
         id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
+        location='encodeURIComponent(location.href)' if with_location else '""',
     )
 
     # no content fallback since IE does not to handle it (or I can't get it to work)
@@ -38,7 +40,7 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
     javascript:(function(){
         var d=document,
             b=d.body, 
-            u=%(target_url)s,
+            u=%(target_url)s + %(location)s,
             m=%(mode)s,
             i=%(id)s,
             o=d.getElementById(i);
