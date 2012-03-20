@@ -37,7 +37,7 @@ def render_let_us_bookmark_body(self, h, comp, *args):
     with h.ul(class_='buttons'):
         with h.li:
             url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-            href = object_bookmarklet(url, mode=Mode.Once, width=800, height=200)
+            href = object_bookmarklet(url, mode=Mode.Once)
             h << h.a('Lorem Ipsum',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
@@ -60,6 +60,14 @@ def render_let_us_bookmark_body(self, h, comp, *args):
                      class_='bookmarklet',
                      href=href)
 
+        with h.li:
+            url = self.application_url + '/alert'
+            href = object_bookmarklet(url, mode=Mode.Repeat, width=0, height=0, style="position:absolute")
+            h << h.a('Alert',
+                     title="Drop me in your browser toolbar!",
+                     class_='bookmarklet',
+                     href=href)
+
     return h.root
 
 
@@ -70,10 +78,23 @@ def render_let_us_bookmark(self, h, comp, *args):
     return h.root
 
 
+@presentation.render_for(LetUsBookmark, model='alert')
+def render_let_us_bookmark_alert(self, h, comp, *args):
+    js = """
+    alert("Alert !");
+    """
+    h << h.script(js, type='text/javascript')
+    return h.root
+
+
 @presentation.init_for(LetUsBookmark, "url == ('counter',)")
 def init_render_let_us_bookmark_counter(self, url, comp, *args):
     comp.becomes(Counter())
 
+
+@presentation.init_for(LetUsBookmark, "url == ('alert',)")
+def init_render_let_us_bookmark_alert(self, url, comp, *args):
+    comp.becomes(self, model='alert')
 
 # ---------------------------------------------------------------
 

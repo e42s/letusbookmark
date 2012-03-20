@@ -26,8 +26,8 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
     subst = dict(
         target_url=json.dumps(target_url),
         mode=json.dumps(mode),
-        width=json.dumps(int(width)),
-        height=json.dumps(int(height)),
+        width=json.dumps(int(width) if width is not None else None),
+        height=json.dumps(int(height) if height is not None else None),
         style=json.dumps(style),
         id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
