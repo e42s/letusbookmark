@@ -13,17 +13,19 @@ def _generate_id(prefix='id'):
 
 
 class Mode:
-    """What should we do when someone repeatedly click on the bookmarklet? Should we execute the bookmarklet
-    action once, repeatedly, or toggle it on/off"""
+    """What should we do when someone repeatedly click on the bookmarklet?
+    Should we execute the bookmarklet action once, repeatedly, or toggle it
+    on/off?"""
     Once = 0  # run only once
     Toggle = 1  # switch on/off
     Repeat = 2  # run at each click
 
 
-def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, style=None,
-                       id=None, type='text/html', with_location=False):
-    """Render a bookmarklet URL that shows the resource found at `target_url` as an HTML object (like
-    an iframe) embedded in the current page."""
+def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None,
+                       style=None, id=None, type='text/html',
+                       with_location=False):
+    """Render a bookmarklet URL that shows the resource found at `target_url`
+    as an HTML object (like an iframe) embedded in the current page."""
     subst = dict(
         target_url=json.dumps(target_url),
         mode=json.dumps(mode),
@@ -32,14 +34,15 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
         style=json.dumps(style),
         id=json.dumps(id or _generate_id('bookmarklet')),
         type=json.dumps(type),
-        location='encodeURIComponent(location.href)' if with_location else '""',
+        location='encodeURIComponent(location.href)' if with_location else '""'
     )
 
-    # no content fallback since IE does not to handle it (or I can't get it to work)
+    # no content fallback since IE does not to handle it (or I can't get it to
+    # work)
     href = """
     javascript:(function(){
         var d=document,
-            b=d.body, 
+            b=d.body,
             u=%(target_url)s + %(location)s,
             m=%(mode)s,
             i=%(id)s,
@@ -60,12 +63,13 @@ def object_bookmarklet(target_url, mode=Mode.Once, width=None, height=None, styl
     })();
     """ % subst
 
-    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
+    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces
 
 
-def script_bookmarklet(target_url, mode=Mode.Once, id=None, type='text/javascript'):
-    """Render a bookmarklet URL that executes the script code found at `target_url` in the
-    current page."""
+def script_bookmarklet(target_url, mode=Mode.Once, id=None,
+                       type='text/javascript'):
+    """Render a bookmarklet URL that executes the script code found at
+    `target_url` in the current page."""
     subst = dict(
         target_url=json.dumps(target_url),
         mode=json.dumps(mode),
@@ -94,4 +98,4 @@ def script_bookmarklet(target_url, mode=Mode.Once, id=None, type='text/javascrip
     })();
     """ % subst
 
-    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces for compactness
+    return re.sub('\s+', ' ', href.strip())  # remove unnecessary spaces

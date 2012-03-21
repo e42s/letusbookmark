@@ -29,24 +29,23 @@ long_desc = read('README')
 
 
 setup(
-      name='letusbookmark',
-      version=find_version('letusbookmark', '__init__.py'),
-      author='Sylvain Prat',
-      author_email='sylvain.prat+letusbookmark@gmail.com',
-      description=desc,
-      long_description=long_desc,
-      license='MIT License',
-      keywords='',
-      url='http://bitbucket.org/sprat/letusbookmark',
-      packages=find_packages(),
-      include_package_data=True,
-      package_data={'' : ['*.cfg']},
-      zip_safe=False,
-      install_requires=('nagare',),
-      message_extractors={ 'letusbookmark' : [('**.py', 'python', None)] },
-      entry_points="""
-      [nagare.applications]
-      letusbookmark = letusbookmark.app:app
-      """
-     )
-
+    name='letusbookmark',
+    version=find_version('letusbookmark', '__init__.py'),
+    author='Sylvain Prat',
+    author_email='sylvain.prat+letusbookmark@gmail.com',
+    description=desc,
+    long_description=long_desc,
+    license='MIT License',
+    keywords='',
+    url='http://bitbucket.org/sprat/letusbookmark',
+    packages=find_packages(),
+    include_package_data=True,
+    package_data={'': ['*.cfg']},
+    zip_safe=False,
+    install_requires=('nagare',),
+    message_extractors={'letusbookmark': [('**.py', 'python', None)]},
+    entry_points="""
+    [nagare.applications]
+    letusbookmark = letusbookmark.app:app
+    """
+)

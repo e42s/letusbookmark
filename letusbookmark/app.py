@@ -7,7 +7,8 @@ import urlparse
 
 from nagare import presentation, component, wsgi
 
-from letusbookmark.bookmarklet import object_bookmarklet, script_bookmarklet, Mode
+from letusbookmark.bookmarklet import object_bookmarklet, script_bookmarklet, \
+                                      Mode
 from letusbookmark.counter import Counter
 
 
@@ -21,7 +22,8 @@ class LetUsBookmark(object):
 @presentation.render_for(LetUsBookmark, model='head')
 def render_let_us_bookmark_head(self, h, *args):
     h.head << h.head.title(self.APP_TITLE)
-    h.head << h.head.meta({'http-equiv': 'Content-Type', 'content': 'text/html; charset=UTF-8'})
+    h.head << h.head.meta({'http-equiv': 'Content-Type',
+                           'content': 'text/html; charset=UTF-8'})
     h.head.css_url('app.css')
     return h.root
 
@@ -36,34 +38,43 @@ def render_let_us_bookmark_body(self, h, comp, *args):
 
     with h.ul(class_='buttons'):
         with h.li:
-            url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.html')
-            href = object_bookmarklet(url, mode=Mode.Once)
+            url = h.head.static_url + 'bookmarklet.html'
+            full_url = urlparse.urljoin(self.host_url, url)
+            href = object_bookmarklet(full_url, mode=Mode.Once)
             h << h.a('Lorem Ipsum',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
                      href=href)
 
         with h.li:
-            url = urlparse.urljoin(self.host_url, h.head.static_url + 'bookmarklet.js')
-            href = script_bookmarklet(url, mode=Mode.Repeat)
+            url = h.head.static_url + 'bookmarklet.js'
+            full_url = urlparse.urljoin(self.host_url, url)
+            href = script_bookmarklet(full_url, mode=Mode.Repeat)
             h << h.a('Location',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
                      href=href)
 
         with h.li:
-            url = self.application_url + '/location?url='
+            full_url = self.application_url + '/location?url='
             style = "width: 100%; height: 30px;"
-            href = object_bookmarklet(url, with_location=True, mode=Mode.Toggle, style=style)
+            href = object_bookmarklet(full_url, with_location=True,
+                                      mode=Mode.Toggle, style=style)
             h << h.a('Location2',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
                      href=href)
 
         with h.li:
-            url = self.application_url + '/counter'
-            style = "position: fixed; top: 10px; right: 10px; z-index: 16777271;"
-            href = object_bookmarklet(url, mode=Mode.Toggle, width=120, height=46, style=style)
+            full_url = self.application_url + '/counter'
+            style = """
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 16777271;
+            """
+            href = object_bookmarklet(full_url, mode=Mode.Toggle, width=120,
+                                      height=46, style=style)
             h << h.a('Counter',
                      title="Drop me in your browser toolbar!",
                      class_='bookmarklet',
@@ -86,9 +97,9 @@ def init_render_let_us_bookmark_counter(self, url, comp, *args):
 
 @presentation.init_for(LetUsBookmark, "url == ('location',)")
 def init_render_let_us_bookmark_alert(self, url, comp, http_method, request):
-    # The referrer information is lost when we call an HTTP URL from a HTTPS one
-    # Also, depending on the browser privacy settings, the referrer information
-    # may not be sent at all. So we can't rely on it.
+    # The referrer information is lost when we call an HTTP URL from a HTTPS
+    # one. Also, depending on the browser privacy settings, the referrer
+    # information may not be sent at all. So we can't rely on it.
     #origin_url = request.referrer
     origin_url = request.params['url']
     comp.becomes(Location(origin_url))
@@ -117,4 +128,4 @@ class LetUsBookmarkApp(wsgi.WSGIApp):
 
 
 # ---------------------------------------------------------------
-app = LetUsBookmarkApp(lambda * args: component.Component(LetUsBookmark(*args)))
+app = LetUsBookmarkApp(lambda *args: component.Component(LetUsBookmark(*args)))
