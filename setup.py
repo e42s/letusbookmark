@@ -25,7 +25,7 @@ def find_version(*file_paths):
 
 # package description
 desc = "Let Us Bookmark demonstrates how to create bookmarklets with Nagare."
-long_desc = read('README')
+long_desc = read('README.rst')
 
 
 setup(
@@ -37,7 +37,7 @@ setup(
     long_description=long_desc,
     license='MIT License',
     keywords='',
-    url='http://bitbucket.org/sprat/letusbookmark',
+    url='https://github.com/sprat/letusbookmark',
     packages=find_packages(),
     include_package_data=True,
     package_data={'': ['*.cfg']},

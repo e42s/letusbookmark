@@ -9,5 +9,5 @@ Support
 =======
 
 This project is hosted on `bitbucket.org
-<https://bitbucket.org/sprat/letusbookmark/>`__.
+<https://github.com/sprat/letusbookmark>`__.
 Please report issues via the bug tracker.
